@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.xml.bind.*;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -22,7 +23,8 @@ import javax.xml.validation.Schema;
 import java.awt.*;
 import java.util.List;
 
-@Route("")
+@Route(value = "MasterData", layout = MainLayout.class)
+@PageTitle("Master Data")
 public class MainView extends VerticalLayout {
 
     private Grid<User> userGrid;

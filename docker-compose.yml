@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  database:
+    image: postgres:14-alpine
+    container_name: vaadin_crud_postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: "pgadmin"
+      POSTGRES_PASSWORD: "pgadmin"
+      POSTGRES_DB: "vaadin_crud_postgres"

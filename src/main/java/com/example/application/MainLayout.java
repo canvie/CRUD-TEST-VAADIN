@@ -23,9 +23,8 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("My Application");
         logo.addClassNames("text-l", "m-m");
 
-        Anchor logout = new Anchor("/login", "Log out");
 
-        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logout);
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo);
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidth("100%");
         header.expand(logo);

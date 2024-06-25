@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Nav;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
@@ -15,8 +16,8 @@ import com.vaadin.flow.router.RouterLink;
 public class MainLayout extends AppLayout {
 
     public MainLayout() {
-        createHeader();
         createDrawer();
+        createHeader();
     }
 
     private void createHeader() {
@@ -34,10 +35,14 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        RouterLink masterData = new RouterLink("MainView", MainView.class);
+        VerticalLayout navbar = new VerticalLayout();
+
+        RouterLink masterData = new RouterLink("Master Data", MainView.class);
         Anchor logout = new Anchor("/login", "Log out");
 
-        addToDrawer(new Nav(masterData));
-        addToDrawer(new Nav(logout));
+        navbar.add(masterData,logout);
+        navbar.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        addToDrawer(navbar);
     }
 }

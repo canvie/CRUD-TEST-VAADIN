@@ -1,7 +1,5 @@
 package com.example.application;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -16,11 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.xml.bind.*;
-import org.springframework.boot.context.properties.bind.Binder;
 
-import javax.xml.validation.Schema;
-import java.awt.*;
 import java.util.List;
 
 @Route(value = "MasterData", layout = MainLayout.class)
@@ -30,7 +24,9 @@ public class MainView extends VerticalLayout {
     private Grid<User> userGrid;
     private TextField tfId;
     private TextField tfUsername;
-    private PasswordField tfPassword;
+    private PasswordField tfPassword1;
+  //Confirm Password
+    private PasswordField tfPassword2;
     private TextField tfRole;
     private com.vaadin.flow.component.button.Button btnSubmit;
     private com.vaadin.flow.component.button.Button btnAdd;
@@ -49,7 +45,7 @@ public class MainView extends VerticalLayout {
         // Add components here
         tfId = new TextField("Id");
         tfUsername = new TextField("Username");
-        tfPassword = new PasswordField("Password");
+        tfPassword1 = new PasswordField("Password");
         tfRole = new TextField("Role");
 
         // Setting Component properties
@@ -91,6 +87,7 @@ public class MainView extends VerticalLayout {
             btnDelete = new Button("Delete", clickEvent -> {
                 deleteUser(user);
             });
+            btnDelete.addThemeVariants(ButtonVariant.LUMO_ERROR);
             return btnDelete;
         }));
         final List<User> userList = userRepository.findAll();
@@ -103,23 +100,30 @@ public class MainView extends VerticalLayout {
         Dialog dialog = new com.vaadin.flow.component.dialog.Dialog();
 
         tfUsername = new TextField("Username");
-        tfPassword = new PasswordField("Password");
+        tfPassword1 = new PasswordField("Password");
+        tfPassword2 = new PasswordField("Confirm Password");
         tfRole = new TextField("Role");
 
         FormLayout formLayout = new FormLayout();
         formLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1));
         formLayout.add(tfUsername);
-        formLayout.add(tfPassword);
+        formLayout.add(tfPassword1);
+        formLayout.add(tfPassword2);
         formLayout.add(tfRole);
 
         Button saveButton = new Button("Save", event -> {
-            user.setUsername(tfUsername.getValue());
-            user.setPassword(tfPassword.getValue());
-            user.setRole(tfRole.getValue());
-            userRepository.save(user);
-            userGrid.setItems(userRepository.findAll()); // Refresh grid
-            dialog.close();
+            if (!tfPassword1.getValue().equals(tfPassword2.getValue())) {
+                Notification.show("Passwords do not match",3000, Notification.Position.MIDDLE);
+            }else {
+                user.setUsername(tfUsername.getValue());
+                user.setPassword(tfPassword1.getValue());
+                user.setRole(tfRole.getValue());
+                userRepository.save(user);
+                userGrid.setItems(userRepository.findAll()); // Refresh grid
+                dialog.close();
+            }
         });
+        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button closeButton = new Button("Close", event -> dialog.close());
 
@@ -133,23 +137,28 @@ public class MainView extends VerticalLayout {
         Dialog dialog = new Dialog();
 
         tfUsername.setValue(user.getUsername());
-        tfPassword.setValue(user.getPassword());
+        tfPassword1.setValue(user.getPassword());
+        tfPassword2.setValue(user.getPassword());
         tfRole.setValue(user.getRole());
 
         Button saveButton = new Button("Save", event -> {
-            user.setUsername(tfUsername.getValue());
-            user.setPassword(tfPassword.getValue());
-            user.setRole(tfRole.getValue());
-            userRepository.save(user);
-            userGrid.setItems(userRepository.findAll()); // Refresh grid to show updated data
-            dialog.close();
-            Notification.show("User updated successfully!");
+            if (!tfPassword1.getValue().equals(tfPassword2.getValue())) {
+                Notification.show("Passwords do not match");
+            }else {
+                user.setUsername(tfUsername.getValue());
+                user.setPassword(tfPassword1.getValue());
+                user.setRole(tfRole.getValue());
+                userRepository.save(user);
+                userGrid.setItems(userRepository.findAll()); // Refresh grid to show updated data
+                dialog.close();
+                Notification.show("User updated successfully!");
+            }
         });
 
         Button closeButton = new Button("Close", event -> dialog.close());
 
         HorizontalLayout buttonsLayout = new HorizontalLayout(saveButton, closeButton);
-        FormLayout formLayout = new FormLayout(tfUsername,tfPassword, tfRole);
+        FormLayout formLayout = new FormLayout(tfUsername, tfPassword1,tfPassword2, tfRole);
         VerticalLayout dialogLayout = new VerticalLayout(formLayout, buttonsLayout);
 
         dialog.add(dialogLayout);

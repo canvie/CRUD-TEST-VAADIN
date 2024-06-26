@@ -1,5 +1,7 @@
-package com.example.application;
+package com.example.application.views;
 
+import com.example.application.data.User;
+import com.example.application.repository.UserRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -74,7 +76,7 @@ public class MainView extends VerticalLayout {
         userGrid = new Grid<>(User.class, false);
         userGrid.addColumn(User::getId).setHeader("Id").setVisible(false);
         userGrid.addColumn(User::getUsername).setHeader("Username");
-        userGrid.addColumn(User::getPassword).setHeader("Password");
+        userGrid.addColumn(User::getPassword).setHeader("Password");setVisible(false);
         userGrid.addColumn(User::getRole).setHeader("Role");
         userGrid.addColumn(new ComponentRenderer<>(user -> {
             btnUpdate = new Button("Update", clickEvent -> {
